@@ -1,7 +1,12 @@
+import { useState } from 'react'
+import { Modal, Button, Empty } from 'antd'
+import { FileTextOutlined, DownloadOutlined } from '@ant-design/icons'
 import { AvatarIllustration } from '@/components/shared/AvatarIllustration'
 import { profile } from '@/lib/content'
 
 export function Hero() {
+  const [resumeOpen, setResumeOpen] = useState(false)
+
   return (
     <section className="bg-surface-raised">
       <div className="max-w-6xl mx-auto px-6 py-16 md:py-24 grid md:grid-cols-2 gap-10 items-center">
@@ -12,9 +17,15 @@ export function Hero() {
           </h1>
           <h2 className="text-2xl md:text-3xl font-bold text-neutral-900">{profile.role}</h2>
           <p className="text-neutral-600 mt-4 max-w-md">{profile.tagline}</p>
-          <a href="#resume" className="btn-primary mt-6">
+          <Button
+            type="primary"
+            size="large"
+            icon={<FileTextOutlined />}
+            onClick={() => setResumeOpen(true)}
+            className="!rounded-full !h-auto !py-2.5 !px-6 mt-6"
+          >
             View Resume
-          </a>
+          </Button>
         </div>
 
         <div className="relative flex justify-center">
@@ -24,6 +35,40 @@ export function Hero() {
           <img className='absolute bottom-6 left-8 size-18 rounded-md text-white text-xs font-bold flex items-center justify-center' src="/icons/AI.svg" alt="adobe-illustrator" />
         </div>
       </div>
+
+      {/* Resume viewer — Ant Design Modal embedding the PDF, with a download
+          fallback. Shows an empty state if no resume has been uploaded yet. */}
+      <Modal
+        title={`${profile.name} — Resume`}
+        open={resumeOpen}
+        onCancel={() => setResumeOpen(false)}
+        footer={
+          profile.resumeUrl
+            ? [
+                <Button
+                  key="download"
+                  icon={<DownloadOutlined />}
+                  href={profile.resumeUrl}
+                  download
+                >
+                  Download
+                </Button>,
+              ]
+            : null
+        }
+        width={840}
+        centered
+      >
+        {profile.resumeUrl ? (
+          <iframe
+            src={profile.resumeUrl}
+            title="Resume"
+            className="w-full h-[75vh] rounded-md border border-border"
+          />
+        ) : (
+          <Empty description="Resume hasn't been uploaded yet." className="py-12" />
+        )}
+      </Modal>
     </section>
   )
 }

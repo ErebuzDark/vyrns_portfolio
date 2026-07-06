@@ -7,6 +7,7 @@ export const profile = {
   degree: 'Bachelor of Science in Information Technology (BSIT)',
   experience: '1 year',
   tagline: "I'm creative designer based in Manila, Philippines, and I'm very passionate and dedicated to my work.",
+  resumeUrl: '/resume.pdf',
 }
 
 export const features = [
